@@ -28,11 +28,13 @@ export class AuthService {
     return null;
   }
 
-  async login(user: SafeUser): Promise<LoginResponse> {
+  async login(username: string, password: string): Promise<LoginResponse> {
     const payload: JwtPayload = {
-      username: user.username,
-      sub: user.id,
+      username: username,
+      sub: username,
     };
+
+    // validate password
 
     return {
       accessToken: this.jwtService.sign(payload),
