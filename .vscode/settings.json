@@ -1,0 +1,19 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "cssvar.files": [
+    "./**/node_modules/open-props/open-props.min.css",
+    // "assets/styles/variables.css" // other styles path
+  ],
+
+  // Do not ignore node_modules css files, which is ignored by default
+  "cssvar.ignore": [],
+
+  // add support for autocomplete in JS or JS like files
+  "cssvar.extensions": [
+    "css", "postcss", "jsx", "tsx"
+  ]
+}

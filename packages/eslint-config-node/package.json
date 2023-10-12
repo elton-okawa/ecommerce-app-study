@@ -1,0 +1,19 @@
+{
+  "name": "@elton-okawa/eslint-config-node",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.47.0",
+    "@typescript-eslint/parser": "^5.47.0",
+    "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.5.0"
+  },
+  "devDependencies": {
+    "typescript": "*"
+  },
+  "peerDependencies": {
+    "@elton-okawa/prettier-config": "*",
+    "typescript": "*"
+  }
+}

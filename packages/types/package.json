@@ -1,0 +1,13 @@
+{
+  "name": "@elton-okawa/types",
+  "version": "0.0.0",
+  "private": true,
+  "prettier": "@elton-okawa/prettier-config",
+  "scripts": {
+    "lint": "pnpm eslint .",
+    "format": "pnpm prettier --write ."
+  },
+  "devDependencies": {
+    "@elton-okawa/prettier-config": "workspace:^1.0.0"
+  }
+}

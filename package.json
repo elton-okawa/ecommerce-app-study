@@ -1,0 +1,14 @@
+{
+  "name": "ecommerce-app-study",
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "Elton Okawa",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm start:dev",
+    "start:dev": "pnpm --stream --filter api start:dev",
+    "lint": "pnpm --filter '...[HEAD^]' lint",
+    "format": "pnpm --filter '...[HEAD^]' format"
+  }
+}
