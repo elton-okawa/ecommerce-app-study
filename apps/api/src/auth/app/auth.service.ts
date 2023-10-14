@@ -8,6 +8,10 @@ export interface JwtPayload {
   sub: string;
 }
 
+export type Token = {
+  accessToken: string;
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -28,13 +32,14 @@ export class AuthService {
     return null;
   }
 
-  async login(username: string, password: string): Promise<LoginResponse> {
+  async login(username: string, password: string): Promise<Token> {
+    // read user from repo
+    // validate password
+
     const payload: JwtPayload = {
       username: username,
       sub: username,
     };
-
-    // validate password
 
     return {
       accessToken: this.jwtService.sign(payload),
