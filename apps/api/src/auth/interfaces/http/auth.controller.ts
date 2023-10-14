@@ -1,16 +1,23 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthService } from '../../app/auth.service';
-import { LoginDTO } from '../dtos/login.dto';
-import { TokenDTO } from '../dtos/token.dto';
+import { AuthApp } from '../../app/auth.app';
+import { LoginDTO, TokenDTO, CreateUserDTO, UserDTO } from '../dtos';
 
 @ApiTags('auth')
 @Controller()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authApp: AuthApp) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDTO): Promise<TokenDTO> {
-    return this.authService.login(loginDto.username, loginDto.password);
+    return this.authApp.login(loginDto.username, loginDto.password);
+  }
+
+  @Post('users')
+  async create(@Body() createUserDto: CreateUserDTO): Promise<void> {
+    await this.authApp.createUser(
+      createUserDto.username,
+      createUserDto.password,
+    );
   }
 }
