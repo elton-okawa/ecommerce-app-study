@@ -9,6 +9,8 @@ import { LocalStrategy } from './local.strategy';
 import { AuthController } from './interfaces/http/auth.controller';
 import { IUserRepository } from './domain/repositories';
 import { UserService } from './domain/services';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity, UserRepository } from './infra/database';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { UserService } from './domain/services';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
+    TypeOrmModule.forFeature([UserEntity]),
   ],
   providers: [
     AuthApp,
@@ -26,7 +29,7 @@ import { UserService } from './domain/services';
     UserService,
     {
       provide: IUserRepository,
-      useValue: { findById: () => null, save: () => null },
+      useClass: UserRepository,
     },
   ],
   exports: [AuthApp],
