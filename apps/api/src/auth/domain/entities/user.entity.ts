@@ -27,4 +27,8 @@ export class User {
 
     return new User({ username, password: pwd });
   }
+
+  isCorrectPassword(password: string): Promise<boolean> {
+    return this._password.isCorrect(password);
+  }
 }
