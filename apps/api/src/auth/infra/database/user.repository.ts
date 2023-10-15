@@ -4,6 +4,7 @@ import { UserEntity } from './user.entity';
 import { IUserRepository } from 'src/auth/domain/repositories';
 import { Repository } from 'typeorm';
 import { User } from 'src/auth/domain/entities';
+import { Password } from 'src/auth/domain/entities/password.vo';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -12,11 +13,19 @@ export class UserRepository implements IUserRepository {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  findById(id: string): Promise<User> {
-    return this.userRepository.findOne({ where: { id } });
+  async findByUsername(username: string): Promise<User | null> {
+    const user = await this.userRepository.findOne({ where: { username } });
+    if (!user) return null;
+
+    return this.entityToDomain(user);
   }
 
-  save(user: User): Promise<User> {
-    return this.userRepository.save(user);
+  async save(user: User): Promise<User> {
+    const entity = await this.userRepository.save(user);
+    return this.entityToDomain(entity);
+  }
+
+  private entityToDomain(entity: UserEntity) {
+    return new User(entity);
   }
 }
