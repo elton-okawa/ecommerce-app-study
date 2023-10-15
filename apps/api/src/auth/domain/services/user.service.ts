@@ -22,17 +22,20 @@ export class UserService {
     return Result.success();
   }
 
-  async authenticate(username: string, password: string): Promise<User> {
+  async authenticate(
+    username: string,
+    password: string,
+  ): Promise<Result<User>> {
     const user = await this.userRepository.findByUsername(username);
     if (!user) {
-      throw new Error(GENERIC_AUTH_ERROR);
+      return Result.error(GENERIC_AUTH_ERROR);
     }
 
     const correctPassword = await user.isCorrectPassword(password);
     if (!correctPassword) {
-      throw new Error(GENERIC_AUTH_ERROR);
+      return Result.error(GENERIC_AUTH_ERROR);
     }
 
-    return user;
+    return Result.success(user);
   }
 }

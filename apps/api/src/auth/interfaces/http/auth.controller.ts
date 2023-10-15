@@ -15,7 +15,12 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginDTO): Promise<TokenDTO> {
-    return this.authApp.login(loginDto.username, loginDto.password);
+    const res = await this.authApp.login(loginDto.username, loginDto.password);
+    if (res.isError) {
+      throw new UnprocessableEntityException(res.error);
+    }
+
+    return res.value;
   }
 
   @Post('users')
