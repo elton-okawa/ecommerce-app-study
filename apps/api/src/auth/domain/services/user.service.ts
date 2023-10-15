@@ -14,7 +14,7 @@ export class UserService {
   async create(username: string, password: string): Promise<Result<void>> {
     const existingUser = await this.userRepository.findByUsername(username);
     if (existingUser) {
-      return Result.error('user already exists');
+      return Result.fail('user already exists');
     }
 
     const user = await User.create(username, password);
@@ -28,12 +28,12 @@ export class UserService {
   ): Promise<Result<User>> {
     const user = await this.userRepository.findByUsername(username);
     if (!user) {
-      return Result.error(GENERIC_AUTH_ERROR);
+      return Result.fail(GENERIC_AUTH_ERROR);
     }
 
     const correctPassword = await user.isCorrectPassword(password);
     if (!correctPassword) {
-      return Result.error(GENERIC_AUTH_ERROR);
+      return Result.fail(GENERIC_AUTH_ERROR);
     }
 
     return Result.success(user);

@@ -16,8 +16,8 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDto: LoginDTO): Promise<TokenDTO> {
     const res = await this.authApp.login(loginDto.username, loginDto.password);
-    if (res.isError) {
-      throw new UnprocessableEntityException(res.error);
+    if (res.failed) {
+      throw new UnprocessableEntityException(res.errorMessage);
     }
 
     return res.value;
@@ -30,8 +30,8 @@ export class AuthController {
       createUserDto.password,
     );
 
-    if (res.isError) {
-      throw new UnprocessableEntityException(res.error);
+    if (res.failed) {
+      throw new UnprocessableEntityException(res.errorMessage);
     }
   }
 }

@@ -36,8 +36,8 @@ export class AuthApp {
 
   async login(username: string, password: string): Promise<Result<Token>> {
     const res = await this.userService.authenticate(username, password);
-    if (res.error) {
-      return Result.error(res.error);
+    if (res.failed) {
+      return Result.fail(res.errorMessage);
     }
 
     const payload: JwtPayload = {
