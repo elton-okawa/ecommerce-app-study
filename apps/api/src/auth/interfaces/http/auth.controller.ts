@@ -1,4 +1,9 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthApp } from '../../app/auth.app';
 import { LoginDTO, TokenDTO, CreateUserDTO, UserDTO } from '../dtos';
@@ -15,9 +20,13 @@ export class AuthController {
 
   @Post('users')
   async create(@Body() createUserDto: CreateUserDTO): Promise<void> {
-    await this.authApp.createUser(
+    const res = await this.authApp.createUser(
       createUserDto.username,
       createUserDto.password,
     );
+
+    if (res.isError) {
+      throw new UnprocessableEntityException(res.error);
+    }
   }
 }

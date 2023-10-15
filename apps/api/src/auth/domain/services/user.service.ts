@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository } from '../repositories';
 import { User } from '../entities';
+import { Result } from 'src/domain';
 
 const GENERIC_AUTH_ERROR = 'invalid username or password';
 
@@ -10,14 +11,15 @@ export class UserService {
     @Inject(IUserRepository) private userRepository: IUserRepository,
   ) {}
 
-  async create(username: string, password: string): Promise<void> {
+  async create(username: string, password: string): Promise<Result<void>> {
     const existingUser = await this.userRepository.findByUsername(username);
     if (existingUser) {
-      throw new Error('user already exists');
+      return Result.error('user already exists');
     }
 
     const user = await User.create(username, password);
     await this.userRepository.save(user);
+    return Result.success();
   }
 
   async authenticate(username: string, password: string): Promise<User> {

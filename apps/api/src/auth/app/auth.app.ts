@@ -29,8 +29,8 @@ export class AuthApp {
     //   return null;
   }
 
-  async createUser(username: string, password: string) {
-    await this.userService.create(username, password);
+  createUser(username: string, password: string) {
+    return this.userService.create(username, password);
   }
 
   async login(username: string, password: string): Promise<Token> {
