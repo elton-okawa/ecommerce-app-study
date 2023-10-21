@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './interfaces/http/jwt.strategy';
 import { AuthController } from './interfaces/http/auth.controller';
 import { IUserRepository } from './repositories';
 import { AuthenticateUser, CreateUser } from './use-cases';
