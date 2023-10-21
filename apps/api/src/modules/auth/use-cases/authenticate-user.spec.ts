@@ -3,17 +3,18 @@ import { AuthenticateUser, JwtPayload } from './authenticate-user';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { IUserRepository } from '../repositories';
 import { User } from '../domain';
-import { createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 
 describe('Authenticate User - Unit Test', () => {
   let authenticateUser: AuthenticateUser;
   let jwtService: JwtService;
-  const userRepository = createMock<IUserRepository>();
+  let userRepository: DeepMocked<IUserRepository>;
 
   const username = 'user';
   const password = 'password';
 
   beforeEach(async () => {
+    userRepository = createMock<IUserRepository>();
     const test: TestingModule = await Test.createTestingModule({
       imports: [
         JwtModule.register({

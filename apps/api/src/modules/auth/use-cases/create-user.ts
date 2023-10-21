@@ -20,7 +20,7 @@ export class CreateUser implements UseCase<CreateUserParams, Result<void>> {
   }: CreateUserParams): Promise<Result<void>> {
     const existingUser = await this.userRepository.findByUsername(username);
     if (existingUser) {
-      return Result.fail('user already exists');
+      return Result.fail('username already exists');
     }
 
     const user = await User.create(username, password);
