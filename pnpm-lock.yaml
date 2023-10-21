@@ -68,6 +68,9 @@ importers:
       '@elton-okawa/types':
         specifier: workspace:^
         version: link:../../packages/types
+      '@golevelup/ts-jest':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@nestjs/cli':
         specifier: ^10.0.0
         version: 10.0.0
@@ -619,6 +622,10 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+
+  /@golevelup/ts-jest@0.4.0:
+    resolution: {integrity: sha512-ehgllV/xU8PC+yVyEUtTzhiSQKsr7k5Jz74B6dtCaVJz7/Vo7JiaACsCLvD7/iATlJUAEqvBson0OHewD3JDzQ==}
+    dev: true
 
   /@hapi/hoek@9.3.0:
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
