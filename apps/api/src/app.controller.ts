@@ -8,4 +8,9 @@ export class AppController {
   getMe(@Request() req) {
     return req.user;
   }
+
+  @Get('health-check')
+  getHealthCheck() {
+    return true;
+  }
 }
