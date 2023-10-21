@@ -1,5 +1,5 @@
 import { TypeOrmModule as OriginalTypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from 'src/auth/infra/database';
+import { UserEntity } from 'src/modules/auth/infra/database';
 
 export const TypeOrmModule = OriginalTypeOrmModule.forRoot({
   type: 'mysql',

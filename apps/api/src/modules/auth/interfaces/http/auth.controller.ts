@@ -5,17 +5,23 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthApp } from '../../app/auth.app';
-import { LoginDTO, TokenDTO, CreateUserDTO, UserDTO } from '../dtos';
+import { LoginDTO, TokenDTO, CreateUserDTO } from '../dtos';
+import { AuthenticateUser, CreateUser } from '../../use-cases';
 
 @ApiTags('auth')
 @Controller()
 export class AuthController {
-  constructor(private authApp: AuthApp) {}
+  constructor(
+    private authenticateUser: AuthenticateUser,
+    private createUser: CreateUser,
+  ) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDTO): Promise<TokenDTO> {
-    const res = await this.authApp.login(loginDto.username, loginDto.password);
+    const res = await this.authenticateUser.execute({
+      username: loginDto.username,
+      password: loginDto.password,
+    });
     if (res.failed) {
       throw new UnprocessableEntityException(res.errorMessage);
     }
@@ -25,10 +31,10 @@ export class AuthController {
 
   @Post('users')
   async create(@Body() createUserDto: CreateUserDTO): Promise<void> {
-    const res = await this.authApp.createUser(
-      createUserDto.username,
-      createUserDto.password,
-    );
+    const res = await this.createUser.execute({
+      username: createUserDto.username,
+      password: createUserDto.password,
+    });
 
     if (res.failed) {
       throw new UnprocessableEntityException(res.errorMessage);

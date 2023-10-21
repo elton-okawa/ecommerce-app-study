@@ -1,4 +1,4 @@
-import { Password } from 'src/auth/domain/entities/password.vo';
+import { Password } from '../../domain/password.vo';
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('user')
