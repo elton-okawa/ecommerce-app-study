@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { TypeOrmModule } from './infra/typeorm/typeorm.module';
+import { ProductModule } from './modules/product/product.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -15,6 +16,7 @@ import * as Joi from 'joi';
     }),
     AuthModule,
     TypeOrmModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
