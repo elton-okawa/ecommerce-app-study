@@ -1,13 +1,13 @@
 import { randomUUID } from 'crypto';
 import { ProductImage } from './product-image';
-import { Column, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 interface ProductParams {
   id?: string;
   name: string;
   description: string;
   price: number;
-  images: ProductImage[];
+  images?: ProductImage[];
 }
 
 interface CreateProductParams {
@@ -17,6 +17,7 @@ interface CreateProductParams {
   images: string[];
 }
 
+@Entity()
 export class Product {
   @PrimaryColumn()
   id: string;
@@ -30,23 +31,29 @@ export class Product {
   @Column()
   price: number;
 
-  @OneToMany(() => ProductImage, (image) => image.product)
+  @OneToMany(() => ProductImage, (image) => image.product, { cascade: true })
   images: ProductImage[];
 
-  constructor(params: ProductParams) {
+  constructor(params?: ProductParams) {
+    if (!params) return;
+
     this.id = params.id ?? randomUUID();
     this.name = params.name;
     this.description = params.description;
     this.price = params.price;
-    this.images = params.images;
+    this.images = params.images ?? [];
   }
 
   static create(params: CreateProductParams) {
     const { images, ...others } = params;
 
-    return new Product({
+    const product = new Product({
       ...others,
-      images: images.map((img) => new ProductImage({ url: img })),
     });
+    product.images = images.map(
+      (img) => new ProductImage({ product, url: img }),
+    );
+
+    return product;
   }
 }
