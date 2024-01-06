@@ -8,6 +8,7 @@ import { AuthenticateUser, CreateUser } from './use-cases';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity, UserRepository } from './infra/database';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthResolver } from './interfaces/graphql/auth.resolver';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       provide: IUserRepository,
       useClass: UserRepository,
     },
+    AuthResolver,
   ],
   exports: [],
   controllers: [AuthController],

@@ -9,6 +9,7 @@ import { TypeOrmModule } from './infra/typeorm/typeorm.module';
 import { ProductModule } from './modules/product/product.module';
 import * as Joi from 'joi';
 import { HelloModule } from './modules/hello/hello.module';
+import { AuthResolver } from './modules/auth/interfaces/graphql/auth.resolver';
 
 @Module({
   imports: [
