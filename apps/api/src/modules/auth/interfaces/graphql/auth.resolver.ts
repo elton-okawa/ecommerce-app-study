@@ -4,6 +4,7 @@ import { LoginInput } from './inputs/login.input';
 import { AuthenticateUser, CreateUser } from '../../use-cases';
 import { SignupInput } from './inputs/signup.input';
 import { Token } from './objects/token.object';
+import { GraphQLBusinessError } from 'src/interfaces/graphql';
 
 @Resolver()
 export class AuthResolver {
@@ -15,7 +16,9 @@ export class AuthResolver {
   @Mutation((returns) => Token)
   async login(@Args('loginInput') loginInput: LoginInput) {
     const res = await this.authenticateUser.execute(loginInput);
-    // TODO deal with error
+    if (res.failed) {
+      throw new GraphQLBusinessError(res.errorMessage);
+    }
 
     return res.value;
   }
@@ -23,7 +26,9 @@ export class AuthResolver {
   @Mutation((returns) => User, { nullable: true })
   async signup(@Args('signupInput') signupInput: SignupInput) {
     const res = await this.createUser.execute(signupInput);
-    // TODO deal with error
+    if (res.failed) {
+      throw new GraphQLBusinessError(res.errorMessage);
+    }
 
     return res.value;
   }
