@@ -5,7 +5,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginDTO, TokenDTO, CreateUserDTO } from '../dtos';
+import { LoginDTO, TokenDTO, CreateUserDTO } from './dtos';
 import { AuthenticateUser, CreateUser } from '../../use-cases';
 
 @ApiTags('auth')
