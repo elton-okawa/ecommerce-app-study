@@ -8,7 +8,7 @@ import { CreateProductInput } from './inputs';
 export class ProductResolver {
   constructor(private createProduct: CreateProduct) {}
 
-  @Mutation((returns) => Product)
+  @Mutation((returns) => Product, { name: 'createProduct' })
   async create(@Args('createInput') createInput: CreateProductInput) {
     const res = await this.createProduct.execute(createInput);
     if (res.failed) {
