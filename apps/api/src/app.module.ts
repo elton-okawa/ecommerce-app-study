@@ -17,6 +17,10 @@ import { AuthResolver } from './modules/auth/interfaces/graphql/auth.resolver';
       validationSchema: Joi.object({
         JWT_SECRET: Joi.string().required(),
       }),
+      envFilePath:
+        process.env.NODE_ENV === 'production'
+          ? '.env'
+          : `.env.${process.env.NODE_ENV}`,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
