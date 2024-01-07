@@ -11,6 +11,7 @@ config
 core
 modules
 infra
+interfaces
 utils
 ```
 
@@ -19,10 +20,21 @@ utils
 ```
 domain
 infra
+interfaces
 mappers
 repositories
 subscribers
 use-cases
+```
+
+### Interfaces
+
+```
+graphql
+- inputs
+- objects
+http
+- dtos
 ```
 
 ## Examples

@@ -5,6 +5,7 @@ import { IProductRepository } from './repositories';
 import { Product } from './domain';
 import { CreateProduct } from './use-cases';
 import { ProductController } from './interfaces/http/product.controller';
+import { ProductResolver } from './interfaces/graphql/product.resolver';
 
 @Module({
   controllers: [ProductController],
@@ -15,6 +16,7 @@ import { ProductController } from './interfaces/http/product.controller';
       useClass: ProductRepository,
     },
     CreateProduct,
+    ProductResolver,
   ],
 })
 export class ProductModule {}
