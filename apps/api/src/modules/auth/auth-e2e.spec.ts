@@ -1,8 +1,10 @@
 import gql from 'graphql-tag';
 import request from 'supertest-graphql';
 import { IntegrationTestManager } from 'test/integration-test-manager';
+import { Token } from './interfaces/graphql/objects/token.object';
+import { UserFixture } from 'test/fixtures';
 
-describe('createUser', () => {
+describe('Auth - e2e tests', () => {
   const integrationTestManager = new IntegrationTestManager();
 
   beforeAll(async () => {
@@ -17,9 +19,32 @@ describe('createUser', () => {
     await integrationTestManager.afterAll();
   });
 
-  describe('a', () => {
-    test('b', () => {
-      expect(true).toBe(true);
+  describe('login mutation', () => {
+    test('should login and return token correctly', async () => {
+      const fixture = await UserFixture.default;
+      const response = await request<{ login: Token }>(
+        integrationTestManager.httpServer,
+      )
+        .mutate(
+          gql`
+            mutation Login($loginInput: LoginInput!) {
+              login(loginInput: $loginInput) {
+                accessToken
+              }
+            }
+          `,
+        )
+        .variables({
+          loginInput: {
+            username: fixture.username,
+            password: 'password',
+          },
+        })
+        .expectNoErrors();
+
+      expect(response.data.login).toStrictEqual({
+        accessToken: expect.any(String),
+      });
     });
   });
 
