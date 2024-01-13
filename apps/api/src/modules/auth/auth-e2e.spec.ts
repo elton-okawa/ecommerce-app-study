@@ -3,6 +3,7 @@ import request from 'supertest-graphql';
 import { IntegrationTestManager } from 'test/integration-test-manager';
 import { Token } from './interfaces/graphql/objects/token.object';
 import { UserFixture } from 'test/fixtures';
+import { JwtService } from '@nestjs/jwt';
 
 describe('Auth - e2e tests', () => {
   const integrationTestManager = new IntegrationTestManager();
@@ -20,7 +21,10 @@ describe('Auth - e2e tests', () => {
   });
 
   describe('login mutation', () => {
-    test('should login and return token correctly', async () => {
+    test('should login and return token with payload correctly', async () => {
+      const jwtService = integrationTestManager
+        .getApp()
+        .get<JwtService>(JwtService);
       const fixture = await UserFixture.default;
       const response = await request<{ login: Token }>(
         integrationTestManager.httpServer,
@@ -45,6 +49,9 @@ describe('Auth - e2e tests', () => {
       expect(response.data.login).toStrictEqual({
         accessToken: expect.any(String),
       });
+      expect(jwtService.decode(response.data.login.accessToken)).toStrictEqual(
+        {},
+      );
     });
   });
 
