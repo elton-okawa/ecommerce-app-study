@@ -46,4 +46,8 @@ export class IntegrationTestManager {
   getAccessToken(): string {
     return this.accessToken;
   }
+
+  getApp() {
+    return this.app;
+  }
 }

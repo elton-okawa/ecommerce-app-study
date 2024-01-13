@@ -49,9 +49,16 @@ describe('Auth - e2e tests', () => {
       expect(response.data.login).toStrictEqual({
         accessToken: expect.any(String),
       });
-      expect(jwtService.decode(response.data.login.accessToken)).toStrictEqual(
-        {},
-      );
+
+      const payload = jwtService.decode(response.data.login.accessToken);
+      expect(payload).toStrictEqual({
+        exp: expect.any(Number),
+        iat: expect.any(Number),
+        sub: fixture.username,
+        username: fixture.username,
+      });
+      const nowSeconds = Date.now() / 1000;
+      expect(payload['exp']).toBeWithin(nowSeconds, nowSeconds + 61);
     });
   });
 
