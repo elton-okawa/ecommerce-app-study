@@ -4,31 +4,31 @@ import { IntegrationTestManager } from 'test/integration-test-manager';
 import { Token } from './interfaces/graphql/objects/token.object';
 import { UserFixture } from 'test/fixtures';
 import { JwtService } from '@nestjs/jwt';
+import { ErrorCode } from 'src/interfaces/graphql';
+import { loadGraphQLString } from 'test/helpers';
+
+const signupMutation = loadGraphQLString('auth', 'signup');
 
 describe('Auth - e2e tests', () => {
-  const integrationTestManager = new IntegrationTestManager();
+  const manager = new IntegrationTestManager();
 
   beforeAll(async () => {
-    await integrationTestManager.beforeAll();
+    await manager.beforeAll();
   });
 
   beforeEach(async () => {
-    await integrationTestManager.beforeEach();
+    await manager.beforeEach();
   });
 
   afterAll(async () => {
-    await integrationTestManager.afterAll();
+    await manager.afterAll();
   });
 
   describe('login mutation', () => {
     test('should login and return token with payload correctly', async () => {
-      const jwtService = integrationTestManager
-        .getApp()
-        .get<JwtService>(JwtService);
+      const jwtService = manager.getApp().get<JwtService>(JwtService);
       const fixture = await UserFixture.default;
-      const response = await request<{ login: Token }>(
-        integrationTestManager.httpServer,
-      )
+      const response = await request<{ login: Token }>(manager.httpServer)
         .mutate(
           gql`
             mutation Login($loginInput: LoginInput!) {
@@ -60,47 +60,64 @@ describe('Auth - e2e tests', () => {
       const nowSeconds = Date.now() / 1000;
       expect(payload['exp']).toBeWithin(nowSeconds, nowSeconds + 61);
     });
+
+    test.each([
+      { username: 'username', password: 'abc', message: 'password' },
+      { username: 'abc', password: 'password', message: 'username' },
+    ])(
+      'should return error because "$message" is invalid',
+      async ({ username, password }) => {
+        const { errors } = await request<{ login: Token }>(manager.httpServer)
+          .mutate(
+            gql`
+              mutation Login($loginInput: LoginInput!) {
+                login(loginInput: $loginInput) {
+                  accessToken
+                }
+              }
+            `,
+          )
+          .variables({
+            loginInput: {
+              username: username,
+              password: password,
+            },
+          });
+
+        expect(errors).toHaveLength(1);
+        expect(errors[0].extensions.code).toEqual(ErrorCode.BUSINESS_ERROR);
+      },
+    );
   });
 
-  //   describe('given that the user does not already exist', () => {
-  //     describe('when a createUser mutation is executed', () => {
-  //       let createdUser: User;
+  describe('signup mutation', () => {
+    test('should create user correctly', async () => {
+      const input = { username: 'super-user', password: 'super-password' };
+      const response = await request(manager.httpServer)
+        .mutate(signupMutation)
+        .variables({
+          input,
+        })
+        .expectNoErrors();
 
-  //       beforeAll(async () => {
-  //         const response = await request<{ createUser: User }>(
-  //           integrationTestManager.httpServer,
-  //         )
-  //           .mutate(
-  //             gql`
-  //               mutation CreateUser($createUserData: CreateUserInput!) {
-  //                 createUser(createUserData: $createUserData) {
-  //                   email
-  //                 }
-  //               }
-  //             `,
-  //           )
-  //           .variables({
-  //             createUserData: {
-  //               email: userStub.email,
-  //               password: 'example',
-  //             },
-  //           })
-  //           .expectNoErrors();
-  //         createdUser = response.data.createUser;
-  //       });
+      // TODO check returned user
+      const savedUser = await manager.userRepository.findOne({
+        where: { username: input.username },
+      });
+      expect(savedUser).toMatchObject({ username: input.username });
+      expect(await savedUser.password.toString()).not.toEqual(input.password);
+    });
 
-  //       test('then the response should be the newly created user', () => {
-  //         expect(createdUser).toMatchObject({
-  //           email: userStub.email,
-  //         });
-  //       });
+    test('should throw error if "username" is already taken', async () => {
+      const input = { username: 'username', password: 'super-password' };
+      const { errors } = await request(manager.httpServer)
+        .mutate(signupMutation)
+        .variables({
+          input,
+        });
 
-  //       test('then the new user should be created', async () => {
-  //         const user = await integrationTestManager
-  //           .getCollection('users')
-  //           .findOne({ email: userStub.email });
-  //         expect(user).toBeDefined();
-  //       });
-  //     });
-  //   });
+      expect(errors).toHaveLength(1);
+      expect(errors[0].extensions.code).toEqual(ErrorCode.BUSINESS_ERROR);
+    });
+  });
 });

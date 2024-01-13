@@ -25,6 +25,10 @@ export class IntegrationTestManager {
     this.dataSource = this.module.get<DataSource>(DataSource);
   }
 
+  get userRepository() {
+    return this.dataSource.getRepository(UserEntity);
+  }
+
   async beforeEach() {
     await this.dataSource.synchronize(true);
     await this.dataSource

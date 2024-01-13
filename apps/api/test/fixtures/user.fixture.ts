@@ -1,7 +1,7 @@
 import { User } from 'src/modules/auth/domain';
 
 const user = {
-  username: 'user',
+  username: 'username',
   password: 'password',
 };
 
