@@ -8,6 +8,7 @@ import { ErrorCode } from 'src/interfaces/graphql';
 import { loadGraphQLString } from 'test/helpers';
 
 const signupMutation = loadGraphQLString('auth', 'signup');
+const loginMutation = loadGraphQLString('auth', 'login');
 
 describe('Auth - e2e tests', () => {
   const manager = new IntegrationTestManager();
@@ -29,15 +30,7 @@ describe('Auth - e2e tests', () => {
       const jwtService = manager.getApp().get<JwtService>(JwtService);
       const fixture = await UserFixture.default;
       const response = await request<{ login: Token }>(manager.httpServer)
-        .mutate(
-          gql`
-            mutation Login($loginInput: LoginInput!) {
-              login(loginInput: $loginInput) {
-                accessToken
-              }
-            }
-          `,
-        )
+        .mutate(loginMutation)
         .variables({
           loginInput: {
             username: fixture.username,
@@ -68,15 +61,7 @@ describe('Auth - e2e tests', () => {
       'should return error because "$message" is invalid',
       async ({ username, password }) => {
         const { errors } = await request<{ login: Token }>(manager.httpServer)
-          .mutate(
-            gql`
-              mutation Login($loginInput: LoginInput!) {
-                login(loginInput: $loginInput) {
-                  accessToken
-                }
-              }
-            `,
-          )
+          .mutate(loginMutation)
           .variables({
             loginInput: {
               username: username,
@@ -118,6 +103,25 @@ describe('Auth - e2e tests', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].extensions.code).toEqual(ErrorCode.BUSINESS_ERROR);
+    });
+  });
+
+  describe('production flow', () => {
+    test('create account and login successfully', async () => {
+      const input = { username: 'super-user', password: 'super-password' };
+      await request(manager.httpServer)
+        .mutate(signupMutation)
+        .variables({
+          input,
+        })
+        .expectNoErrors();
+
+      await request<{ login: Token }>(manager.httpServer)
+        .mutate(loginMutation)
+        .variables({
+          loginInput: input,
+        })
+        .expectNoErrors();
     });
   });
 });
