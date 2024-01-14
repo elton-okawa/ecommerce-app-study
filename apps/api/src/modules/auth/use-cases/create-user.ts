@@ -9,7 +9,7 @@ interface CreateUserParams {
 }
 
 @Injectable()
-export class CreateUser implements UseCase<CreateUserParams, Result<void>> {
+export class CreateUser implements UseCase<CreateUserParams, void> {
   constructor(
     @Inject(IUserRepository) private userRepository: IUserRepository,
   ) {}
