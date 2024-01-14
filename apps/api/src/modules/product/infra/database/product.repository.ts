@@ -14,4 +14,8 @@ export class ProductRepository implements IProductRepository {
   save(product: Product): Promise<Product> {
     return this.productRepository.save(product);
   }
+
+  list(): Promise<Product[]> {
+    return this.productRepository.find({ relations: ['images'] });
+  }
 }

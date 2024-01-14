@@ -3,7 +3,7 @@ import { ProductRepository } from './infra/database';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IProductRepository } from './repositories';
 import { Product } from './domain';
-import { CreateProduct } from './use-cases';
+import { CreateProduct, ListProducts } from './use-cases';
 import { ProductController } from './interfaces/http/product.controller';
 import { ProductResolver } from './interfaces/graphql/product.resolver';
 
@@ -15,8 +15,9 @@ import { ProductResolver } from './interfaces/graphql/product.resolver';
       provide: IProductRepository,
       useClass: ProductRepository,
     },
-    CreateProduct,
     ProductResolver,
+    CreateProduct,
+    ListProducts,
   ],
 })
 export class ProductModule {}
