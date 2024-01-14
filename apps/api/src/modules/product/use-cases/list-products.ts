@@ -4,7 +4,7 @@ import { Product } from '../domain';
 import { IProductRepository } from '../repositories';
 
 @Injectable()
-export class ListProducts implements UseCase<void, Result<Product[]>> {
+export class ListProducts implements UseCase<void, Product[]> {
   constructor(
     @Inject(IProductRepository) private productRepository: IProductRepository,
   ) {}

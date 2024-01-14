@@ -20,9 +20,7 @@ interface AuthenticateParams {
 }
 
 @Injectable()
-export class AuthenticateUser
-  implements UseCase<AuthenticateParams, Result<Token>>
-{
+export class AuthenticateUser implements UseCase<AuthenticateParams, Token> {
   constructor(
     @Inject(IUserRepository) private userRepository: IUserRepository,
     private jwtService: JwtService,

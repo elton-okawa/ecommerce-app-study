@@ -11,9 +11,7 @@ interface CreateProductParams {
 }
 
 @Injectable()
-export class CreateProduct
-  implements UseCase<CreateProductParams, Result<Product>>
-{
+export class CreateProduct implements UseCase<CreateProductParams, Product> {
   constructor(
     @Inject(IProductRepository) private productRepository: IProductRepository,
   ) {}
