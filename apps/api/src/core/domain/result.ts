@@ -38,4 +38,12 @@ export class Result<T> {
   static fail<U>(message: string): Result<U> {
     return new Result({ error: message, isSuccess: false });
   }
+
+  static all(...results: Result<unknown>[]): Result<null> {
+    const errorMessages = results.filter((res) => res.failed);
+    if (errorMessages.length > 0)
+      return Result.fail(`Failed with: \n-${errorMessages.join('\n-')}`);
+
+    return Result.success();
+  }
 }
