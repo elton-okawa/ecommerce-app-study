@@ -12,15 +12,15 @@ interface CreateProductParams {
 
 @Injectable()
 export class CreateProduct
-  implements UseCase<CreateProductParams, Result<void>>
+  implements UseCase<CreateProductParams, Result<Product>>
 {
   constructor(
     @Inject(IProductRepository) private productRepository: IProductRepository,
   ) {}
 
-  async execute(params: CreateProductParams): Promise<Result<void>> {
+  async execute(params: CreateProductParams): Promise<Result<Product>> {
     const product = Product.create(params);
-    await this.productRepository.save(product);
-    return Result.success();
+    const saved = await this.productRepository.save(product);
+    return Result.success(saved);
   }
 }

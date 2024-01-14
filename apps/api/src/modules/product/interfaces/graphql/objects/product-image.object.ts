@@ -1,7 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class User {
+export class ProductImage {
   @Field()
-  username: string;
+  id: string;
+
+  @Field()
+  url: string;
 }

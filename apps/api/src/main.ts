@@ -9,7 +9,7 @@ async function bootstrap() {
   setupSwagger(app);
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3000, process.env.HOSTNAME ?? '0.0.0.0');
 }
 
 function setupSwagger(app: INestApplication) {

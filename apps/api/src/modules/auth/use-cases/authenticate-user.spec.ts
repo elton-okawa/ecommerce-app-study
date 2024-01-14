@@ -50,7 +50,7 @@ describe('Authenticate User - Unit Test', () => {
     });
   });
 
-  it('should fail if user is does not exist', async () => {
+  it('should fail if user does not exist', async () => {
     userRepository.findByUsername.mockResolvedValueOnce(null);
 
     const res = await authenticateUser.execute({ username, password });

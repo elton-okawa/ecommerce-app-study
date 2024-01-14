@@ -9,9 +9,11 @@ pnpm install
 ```
 
 ```
+docker compose up -d
 pnpm dev
 ```
 
-## Decisions
+## Docs
 
-View the [decisions](./docs/decisions)
+- View [architecture](./docs/architecture)
+- View the [decisions](./docs/decisions)

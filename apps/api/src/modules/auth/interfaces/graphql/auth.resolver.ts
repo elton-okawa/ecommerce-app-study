@@ -1,10 +1,11 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Request, UseGuards } from '@nestjs/common';
 import { User } from './objects/user.object';
 import { LoginInput } from './inputs/login.input';
 import { AuthenticateUser, CreateUser } from '../../use-cases';
 import { SignupInput } from './inputs/signup.input';
 import { Token } from './objects/token.object';
-import { GraphQLBusinessError } from 'src/interfaces/graphql';
+import { GqlJwtAuthGuard, GraphQLBusinessError } from 'src/interfaces/graphql';
 
 @Resolver()
 export class AuthResolver {
@@ -12,6 +13,12 @@ export class AuthResolver {
     private authenticateUser: AuthenticateUser,
     private createUser: CreateUser,
   ) {}
+
+  @UseGuards(GqlJwtAuthGuard)
+  @Query((returns) => User)
+  async me(@Context() ctx) {
+    return ctx.req.user;
+  }
 
   @Mutation((returns) => Token)
   async login(@Args('loginInput') loginInput: LoginInput) {
