@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository } from '../repositories';
 import { User } from '../domain';
 import { Result, UseCase } from 'src/core/domain';
+import { Cart } from 'src/modules/cart';
 
 interface CreateUserParams {
   username: string;
@@ -24,6 +25,7 @@ export class CreateUser implements UseCase<CreateUserParams, void> {
     }
 
     const user = await User.create(username, password);
+    const cart = Cart.create({ userId: user.id });
     await this.userRepository.save(user);
     return Result.success();
   }

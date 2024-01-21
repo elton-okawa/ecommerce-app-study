@@ -24,7 +24,7 @@ export class Cart {
   }
 
   get items() {
-    return this._items.values();
+    return Array.from(this._items.values());
   }
 
   constructor(params: CartConstructor) {

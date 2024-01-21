@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity, UserRepository } from './infra/database';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthResolver } from './interfaces/graphql/auth.resolver';
+import { CartModule, CreateCart } from 'src/modules/cart';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthResolver } from './interfaces/graphql/auth.resolver';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([UserEntity]),
+    CartModule,
   ],
   providers: [
     JwtStrategy,
@@ -33,6 +35,7 @@ import { AuthResolver } from './interfaces/graphql/auth.resolver';
       useClass: UserRepository,
     },
     AuthResolver,
+    CreateCart,
   ],
   exports: [],
   controllers: [AuthController],
