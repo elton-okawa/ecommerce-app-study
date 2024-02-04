@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Cart } from '../domain';
 import { Result, UseCase } from 'src/core/domain';
 import { ICartRepository } from '../repositories';
+import { DomainEventsManager } from 'src/core/domain/domain-events-manager';
 
 export type CreateCartParams = {
   userId: string;

@@ -1,5 +1,6 @@
-import { randomUUID } from 'crypto';
 import { Password } from './password.vo';
+import { AggregateRoot } from 'src/core/domain/aggregate-root';
+import { UserCreated } from './user-created.event';
 
 type UserConstructor = {
   id?: string;
@@ -7,8 +8,7 @@ type UserConstructor = {
   password: Password;
 };
 
-export class User {
-  id: string;
+export class User extends AggregateRoot<User> {
   username: string;
   private _password: Password;
 
@@ -17,7 +17,8 @@ export class User {
   }
 
   constructor(params: UserConstructor) {
-    this.id = params.id ?? randomUUID();
+    super(params.id);
+
     this.username = params.username;
     this._password = params.password;
   }
@@ -25,7 +26,9 @@ export class User {
   static async create(username: string, password: string): Promise<User> {
     const pwd = await Password.create(password);
 
-    return new User({ username, password: pwd });
+    const user = new User({ username, password: pwd });
+    user.addEvent(new UserCreated(user));
+    return user;
   }
 
   isCorrectPassword(password: string): Promise<boolean> {
