@@ -1,6 +1,5 @@
-import { DomainEventsManager } from 'src/core/domain/domain-events-manager';
 import { Password } from '../../domain/password.vo';
-import { Entity, Column, PrimaryColumn, AfterInsert } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('user')
 export class UserEntity {
@@ -18,9 +17,4 @@ export class UserEntity {
     },
   })
   password: Password;
-
-  @AfterInsert()
-  dispatchEvents() {
-    DomainEventsManager.dispatchEventsForAggregate(this.id);
-  }
 }

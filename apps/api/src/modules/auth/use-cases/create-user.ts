@@ -25,6 +25,7 @@ export class CreateUser implements UseCase<CreateUserParams, void> {
 
     const user = await User.create(username, password);
     await this.userRepository.save(user);
+    user.dispatchEvents();
     return Result.success();
   }
 }
